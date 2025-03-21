@@ -1,0 +1,30 @@
+.robot-container {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+  
+  .robot-icon {
+    font-size: 80px;
+    color: #ff9800;  /* Change this to any color (e.g., orange) */
+    position: absolute;
+    animation: moveRobot 8s linear infinite alternate, floatRobot 4s ease-in-out infinite;
+  }
+  
+  /* Move left to right within 90vw */
+  @keyframes moveRobot {
+    0% { left: 0; }
+    100% { left: 90vw; }
+  }
+  
+  /* Move up and down between 20vh to 80vh */
+  @keyframes floatRobot {
+    0% { top: 20vh; }
+    50% { top: 80vh; }
+    100% { top: 20vh; }
+  }
+  
