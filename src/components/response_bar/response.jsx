@@ -9,7 +9,8 @@ import Slide_Bar from "../slide_bar/slide";
 import TypingEffect from "./typingeffect";
 import "./response.css";
 import { assets } from "../../assets/assets";
-export const Array = []
+
+export const Array = [];
 
 const Response_Bar = () => {
   const [prompt, setPrompt] = useState("");
@@ -17,6 +18,7 @@ const Response_Bar = () => {
   const [conversation, setConversation] = useState([]);
   const [isListening, setIsListening] = useState(false);
   const [userModalBody, setUserModalBody] = useState(false);
+  const [requestInProgress, setRequestInProgress] = useState(false);
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
 
@@ -33,36 +35,71 @@ const Response_Bar = () => {
     "Best ways to learn coding?",
   ];
 
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
+  // Load conversation from local storage when component mounts
   useEffect(() => {
-    scrollToBottom();
+    const storedConversation = JSON.parse(localStorage.getItem("conversation")) || [];
+    setConversation(storedConversation);
+  }, []);
+
+  // Scroll to bottom when conversation updates
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [conversation]);
 
-
-  const handleSend = (text) => {
-    if (!text.trim()) return;
-    setLoading(true);
-    setConversation((prev) => [...prev, { prompt: text, response: "Thinking..." }]);
-
-    setTimeout(() => {
-      setConversation((prev) => [...prev, { prompt: text, response: "This is a sample response." }]);
-      setLoading(false);
-    }, 2000);
-    setPrompt("");
+  const handleSend = async (currentPrompt) => {
+    if (currentPrompt.trim() && !requestInProgress) {
+      console.log("Sending request for prompt:", currentPrompt); // ✅ Check if this logs twice
+  
+      setPrompt(""); 
+      setLoading(true);
+      setRequestInProgress(true);
+  
+      Array.push(currentPrompt);
+      const newConversation = [...conversation, { prompt: currentPrompt, response: "Thinking..." }];
+      setConversation(newConversation);
+      localStorage.setItem("conversation", JSON.stringify(newConversation));
+      localStorage.setItem("lastPrompt", currentPrompt);
+  
+      try {
+        const res = await fetch("https://render-back-end-8.onrender.com/prompt", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: currentPrompt }),
+        });
+  
+        if (!res.ok) throw new Error("Failed to fetch AI response");
+  
+        const responseData = await res.json();
+        console.log("Received response:", responseData); // ✅ Check if this logs twice
+  
+        setLoading(false);
+        const updatedConversation = newConversation.map((entry) =>
+          entry.prompt === currentPrompt ? { ...entry, response: responseData.response } : entry
+        );
+        setConversation(updatedConversation);
+        localStorage.setItem("conversation", JSON.stringify(updatedConversation));
+  
+      } catch (error) {
+        console.error("Error:", error.message);
+        setLoading(false);
+        setConversation([...newConversation, { prompt: currentPrompt, response: "Error occurred." }]);
+        localStorage.setItem("conversation", JSON.stringify(newConversation));
+      } finally {
+        setRequestInProgress(false);
+      }
+    }
   };
+  
 
-
+  // Handle Enter key to send prompt
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault(); // Prevent new line
+      e.preventDefault();
       handleSend(prompt);
     }
   };
 
+  // Speech recognition setup
   useEffect(() => {
     if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
       const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -70,7 +107,7 @@ const Response_Bar = () => {
       recognition.lang = "en-US";
 
       recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
+        const transcript = event.results[0][0].transcript.trim();
         setPrompt(transcript);
         handleSend(transcript);
       };
@@ -81,6 +118,7 @@ const Response_Bar = () => {
     }
   }, []);
 
+  // Start voice recognition
   const startListening = () => {
     if (!recognitionRef.current) {
       alert("Speech recognition is not supported in this browser.");
@@ -106,16 +144,14 @@ const Response_Bar = () => {
         <div className="header-actions">
           <Link to="/trygemini" className="advanced-link">← Advanced Version</Link>
           <div className="nav-user-icon">
-          {userModalBody ? (
+            {userModalBody ? (
               <LogoutModal setUserModalBody={setUserModalBody} />
             ) : (
-
               <ImageComponent
                 src={assets.user_icon}
                 style={{ width: 50, borderRadius: "50%", cursor: "pointer" }}
                 onClick={() => setUserModalBody(true)}
               />
-
             )}
           </div>
         </div>
@@ -168,7 +204,10 @@ const Response_Bar = () => {
           className="chat-input"
         />
         <div className="chat-input-buttons">
-          <button onClick={startListening} className={`chat-mic ${isListening ? "listening" : ""}`}>
+          <button 
+            onClick={startListening} 
+            className={`chat-mic ${isListening ? "listening" : ""}`}
+          >
             <FaMicrophone size={25} />
           </button>
           {prompt.length > 0 && (

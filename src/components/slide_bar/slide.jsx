@@ -3,19 +3,29 @@ import ImageComponent from '../ImageComponent/image.jsx';
 import { assets } from '../../assets/assets';
 import './slide.css';
 import { useNavigate } from 'react-router-dom';
-import { Array } from '../response_bar/response.jsx';
 
-export const PromptReq = []
+export const PromptReq = [];
 
-
-function Slide_Bar( ) {
+function Slide_Bar() {
   const [menu, setMenu] = useState(false);
   const [menuIndex, setMenuIndex] = useState(null);
   const [editingIndex, setEditingIndex] = useState(null);
   const [editText, setEditText] = useState('');
-  const [update, setUpdate] = useState(0); // Dummy state for forcing re-render
+  const [conversationHistory, setConversationHistory] = useState([]);
+  const [responseText, setResponseText] = useState('');
   const menuRef = useRef(null);
   const navigate = useNavigate();
+
+  // Load saved history from localStorage on mount
+  useEffect(() => {
+    const savedHistory = JSON.parse(localStorage.getItem('conversationHistory')) || [];
+    setConversationHistory(savedHistory);
+  }, []);
+
+  // Save history to localStorage whenever conversationHistory changes
+  useEffect(() => {
+    localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
+  }, [conversationHistory]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -29,28 +39,43 @@ function Slide_Bar( ) {
     };
   }, []);
 
-
   const deletePrompt = (index) => {
-    Array.splice(index, 1); 
-    setUpdate((prev) => prev + 1); 
+    const updatedHistory = [...conversationHistory];
+    updatedHistory.splice(index, 1);
+    setConversationHistory(updatedHistory);
   };
 
   const startRenaming = (index, prompt) => {
     setEditingIndex(index);
-    setEditText(prompt);
+    setEditText(prompt.prompt);
   };
 
   const saveRenaming = (index) => {
-    Array[index] = editText; 
+    const updatedHistory = [...conversationHistory];
+    updatedHistory[index].prompt = editText;
+    setConversationHistory(updatedHistory);
     setEditingIndex(null);
-    setUpdate((prev) => prev + 1); 
   };
 
-  const onPromptClick = (prompt) => {
-    PromptReq.length = 0; // Clear previous entry
-    PromptReq.push(prompt); // Add the new prompt
+  const onPromptClick = (prompt, response) => {
+    PromptReq.length = 0;
+    PromptReq.push(prompt);
+    showTypingEffect(response);
   };
-  
+
+  const showTypingEffect = (response) => {
+    setResponseText('');
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < response.length) {
+        setResponseText((prev) => prev + response[i]);
+        i++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 50);
+  };
+
   return (
     <div className="slide_container">
       {!menu && (
@@ -69,8 +94,8 @@ function Slide_Bar( ) {
           <li className="history-title">
             <ImageComponent src={assets.history_icon} /> Recent History
           </li>
-          {Array.length > 0 ? (
-            Array.map((prompt, index) => (
+          {conversationHistory.length > 0 ? (
+            conversationHistory.map((item, index) => (
               <li key={index} className="history-item">
                 {editingIndex === index ? (
                   <input
@@ -80,8 +105,8 @@ function Slide_Bar( ) {
                     onBlur={() => saveRenaming(index)}
                   />
                 ) : (
-                  <span style={{ fontSize: "1rem"} }  onClick={() => onPromptClick(prompt)}>
-                    {prompt}
+                  <span style={{ fontSize: "1rem"}} onClick={() => onPromptClick(item.prompt, item.response)}>
+                    {item.prompt}
                   </span>
                 )}
 
@@ -91,10 +116,7 @@ function Slide_Bar( ) {
 
                 {menuIndex === index && (
                   <div className="options-menu" ref={menuRef}>
-                    {/* <button onClick={() => setMenuIndex(null)} className="back-btn">
-                      🔙 Back
-                    </button> */}
-                    <button onClick={() => startRenaming(index, prompt)}>Rename</button>
+                    <button onClick={() => startRenaming(index, item)}>Rename</button>
                     <button onClick={() => deletePrompt(index)} className="delete-btn">
                       Delete
                     </button>
@@ -128,6 +150,14 @@ function Slide_Bar( ) {
           </ul>
         </div>
       </div>
+
+      {/* Display Response with Typing Effect */}
+      {responseText && (
+        <div className="response-box">
+          <h4>Response:</h4>
+          <p>{responseText}</p>
+        </div>
+      )}
     </div>
   );
 }

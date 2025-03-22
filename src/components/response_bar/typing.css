@@ -1,0 +1,22 @@
+@media  (max-width :1024px) {
+
+     .chatContainer {
+    width: 1000px,
+   
+  }
+}
+
+@media (max-width: 480px) {
+    .chatContainer{
+        padding: 0px  !important;
+    }
+
+    .buttonContainer{
+              
+        padding: 10px 0px ;
+    }
+    .messageText{
+        margin: 0rem !important;
+    }
+    
+}

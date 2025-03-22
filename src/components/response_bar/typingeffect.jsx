@@ -1,11 +1,12 @@
+import { Margin } from "@mui/icons-material";
 import React, { useEffect, useState, useRef } from "react";
 import { FaCopy, FaShareAlt, FaThumbsUp } from "react-icons/fa";
+import "./typing.css"
 
 const TypingEffect = ({ text, delay = 30, prompt }) => {
   const [displayText, setDisplayText] = useState("");
   const [index, setIndex] = useState(0);
   const [showButtons, setShowButtons] = useState(false);
-  const [showContinue, setShowContinue] = useState(false);
   const [liked, setLiked] = useState(false);
   const chatContainerRef = useRef(null);
   const typingIntervalRef = useRef(null);
@@ -13,19 +14,18 @@ const TypingEffect = ({ text, delay = 30, prompt }) => {
   useEffect(() => {
     if (!text) return;
 
-    setDisplayText(""); // Clear previous text before typing new text
+    setDisplayText(""); // Reset before typing starts
     setShowButtons(false);
-    setShowContinue(false);
     setIndex(0);
 
-    let formattedText = text
-      .replace(/\*/g, "")
-      .replace(/(\d+\.)/g, "\n$1"); // Format numbered lists
+    let formattedText = text.replace(/\*/g, "").replace(/(\d+\.)/g, "\n$1");
 
     let charIndex = 0;
+    if (typingIntervalRef.current) clearInterval(typingIntervalRef.current); // Clear any existing interval
+
     typingIntervalRef.current = setInterval(() => {
       if (charIndex < formattedText.length) {
-        setDisplayText((prev) => prev + formattedText[charIndex]);
+        setDisplayText((prev) => prev + formattedText[charIndex]); // Append character correctly
         charIndex += 1;
       } else {
         clearInterval(typingIntervalRef.current);
@@ -70,12 +70,12 @@ const TypingEffect = ({ text, delay = 30, prompt }) => {
   };
 
   return (
-    <div style={styles.chatContainer}>
+    <div className="chatContainer" style={styles.chatContainer}>
       {prompt && <div style={styles.chatPrompt}>{prompt}</div>}
 
-      <div style={styles.chatBox} ref={chatContainerRef}>
+      <div className="chatBox" style={styles.chatBox} ref={chatContainerRef}>
         <div style={styles.chatMessage}>
-          <div style={styles.messageText}>
+          <div className="messageText" style={styles.messageText}>
             {displayText.split("\n").map((line, index) => (
               <React.Fragment key={index}>
                 {line}
@@ -87,7 +87,7 @@ const TypingEffect = ({ text, delay = 30, prompt }) => {
       </div>
 
       {showButtons && (
-        <div style={styles.buttonContainer}>
+        <div  className="buttonContainer" style={styles.buttonContainer}>
           <button style={styles.iconButton} onClick={handleCopy} title="Copy">
             <FaCopy /> Copy
           </button>
@@ -109,14 +109,11 @@ const TypingEffect = ({ text, delay = 30, prompt }) => {
 
 const styles = {
   chatContainer: {
-    maxWidth: "1100px",
-    margin: "auto",
-    padding: "15px",
-    height: "auto",
+    maxWidth: "1400px",
+    padding: "5px",
     minHeight: "65vh",
     backgroundColor: "#ffffff",
     borderRadius: "12px",
-    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
   },
   chatBox: {
     maxHeight: "400px",
@@ -126,7 +123,10 @@ const styles = {
     flexDirection: "column",
     gap: "10px",
     fontSize: "0.9rem",
+    scrollbarWidth: "none", // Hide scrollbar for Firefox
+    msOverflowStyle: "none", // Hide scrollbar for IE/Edge
   },
+  
   chatMessage: {
     backgroundColor: "#ffffff",
     padding: "10px",
@@ -136,13 +136,14 @@ const styles = {
   messageText: {
     fontSize: "1rem",
     lineHeight: "1.5",
+    margin :"4rem",
   },
   buttonContainer: {
     display: "flex",
     gap: "10px",
     width: "100%",
     marginTop: "15px",
-    padding: "10px 0",
+    padding: "10px 20px",
     borderTop: "1px solid #ddd",
   },
   iconButton: {
