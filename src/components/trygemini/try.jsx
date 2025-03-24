@@ -78,12 +78,12 @@ const GeminiSubscription = () => {
        <div style={{display : "flex" , flexDirection : "column" , gap : "20px"}}>
        <motion.button
           className="start-trial"
-          onClick={handleStartTrial}
+         
           whileTap={{ scale: 0.9 }}
           animate={{ backgroundColor: isStarting ? "#27ae60" : "#007bff" }}
           transition={{ duration: 0.3 }}
         >
-          {isStarting ? "Premium is going to start shortly.................." : "Start Trial"}
+          {isStarting ? "Premium is going to start shortly....." : "Premium is going to start shortly......"}
         </motion.button>
         <motion.button
           className="start-trial"

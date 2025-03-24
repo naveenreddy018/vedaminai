@@ -6,6 +6,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Appa } from '../Notify/notify';
 import "./Register.css"
 import { assets } from '../../assets/assets';
+import styles from "./login.module.css"; // Import CSS module
+import { Brain } from 'lucide-react';
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -15,7 +17,7 @@ export default function SignupPage() {
   const [otp, setOtp] = useState('');
   const [errors, setErrors] = useState({});
   const [otpRequested, setOtpRequested] = useState(null);
-  const [signupmessage,setsignupmessage] = useState(false)
+  const [signupmessage, setsignupmessage] = useState(false)
 
 
   const validateInputs = () => {
@@ -66,105 +68,122 @@ export default function SignupPage() {
       return;
     }
     try {
-     const res = await fetch(`${baseUrl}/getotp`, {
+      const res = await fetch(`${baseUrl}/getotp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username }),
       });
       const data = await res.json();
-    
-      if(!res.ok){
+
+      if (!res.ok) {
         setOtpRequested(data.message || "Failed to send otp")
-      return;
+        return;
       }
-      
-        setOtp(data.otp)
+
+      setOtp(data.otp)
       setOtpRequested(true);
       // alert('OTP sent successfully.');
-    setOtpRequested("Otp Sent")
-      
+      setOtpRequested("Otp Sent")
+
     } catch (error) {
-  setOtpRequested(error)
+      setOtpRequested(error)
       // alert('An error occurred while sending OTP hello.');
-    // console.log(error)
+      // console.log(error)
     }
   };
 
   return (
-    <Box className="seperator"sx={{display : "flex",justifyContent: 'center', gap : "10%" ,alignItems: 'center',  }} >
-       <Typography className="image" variant="h3" sx={{ fontWeight: 'bold', display : "inline-flex", gap: " 50px", color: '#1976d2', textAlign: 'center', paddingBottom: '0px' }}>
-       <img className='imagecontainer' src={assets.unnamed} alt="register image " style={{width : "45%"}} />
-        </Typography>
-      <Box  className="container1"  sx={{ display: 'flex', flexDirection: 'column', height: '100vh', justifyContent: 'center', alignItems: 'center',marginLeft : "-30%"}}>
-       
-      <Box className="container"  sx={{ width: '350px', p: 3, boxShadow: 3, borderRadius: 2, backgroundColor: 'white' }}>
-        <Typography variant="h3" sx={{ fontWeight:"550",   color: "transparent", background: "linear-gradient(to right, #8B0000, #FF1493, #C71585)",
-              WebkitBackgroundClip: "text",textAlign: 'center', paddingBottom: '20px' ,fontSize:"2.5rem"}}>
-        VedaMindAI
-        </Typography>
-        <Typography variant="h5" textAlign="center" gutterBottom>
-          Signup
-        </Typography>
-        <form className='form_element' onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField fullWidth label="Username" value={username} onChange={(e) => setUsername(e.target.value)} error={!!errors.username} helperText={errors.username} />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField fullWidth type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} error={!!errors.password} helperText={errors.password} />
-            </Grid>
-            {otpRequested  && otpRequested === "Otp Sent" && (
-              <Grid item xs={12}>
-                <TextField fullWidth label="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} error={!!errors.otp} helperText={errors.otp} />
-              </Grid>
-            )}
-            { otpRequested != "Otp Sent" && (
-              <Grid item xs={12}>
-                <Button fullWidth variant="contained" onClick={handleOtpClick}>
-                  Get OTP
-                </Button>
-                
-              </Grid>
-            )}
-            <div    style={{backgroundColor : "blue"}}>
-            {otpRequested && <Appa  action={otpRequested} />}
-            </div>
-            <Grid item xs={12}>
-              { otpRequested === "Otp Sent" &&
-                <Button fullWidth variant="contained"  color="primary" type="submit" disabled={!otpRequested}>
-                Signup
-              </Button>
-              }
-              {signupmessage && <Appa  action={signupmessage} />}
-  
-            </Grid>
-            <Grid item xs={12}>
-              <Button fullWidth variant="text" color="secondary" onClick={() => navigate('/')}>Already have an account? Login</Button>
-            </Grid>
-          </Grid>
-        </form>
-      </Box>
+    <Box className="seperator" sx={{ display: "flex", justifyContent: 'center', gap: "10%", alignItems: 'center', }} >
+      <Typography className="image" variant="h3" sx={{ fontWeight: 'bold', display: "inline-flex", gap: " 50px", color: '#1976d2', textAlign: 'center', paddingBottom: '0px' }}>
+        <img className='imagecontainer' src={assets.unnamed} alt="register image " style={{ width: "45%" }} />
+      </Typography>
+      <Box className="container1" sx={{ display: 'flex', flexDirection: 'column', height: '100vh', justifyContent: 'center', alignItems: 'center', marginLeft: "-30%" }}>
 
-      <Box className="btns" sx={{ textAlign: 'center', marginTop: 2 }}>
-        <Button
-        color="primary"
-          variant="contained"
-          sx={{  margin: 1 }}
-          startIcon={<FontAwesomeIcon icon={faGooglePlay} />}
-        >
-         <Link style={{color : "white",fontWeight : "400" }} to="https://www.google.com/search?q=goggle+gemein+ai+playstore&rlz=1C1CHBF_enIN1139IN1139&oq=goggle+gemein+ai+playstore&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgWGB4yCAgCEAAYFhgeMg0IAxAAGIYDGIAEGIoFMg0IBBAAGIYDGIAEGIoFMg0IBRAAGIYDGIAEGIoF0gEINTQxNWowajeoAgCwAgA&sourceid=chrome&ie=UTF-8" >Get it on Play store</Link>
-        </Button>
+        <Box className="container" sx={{ width: '350px', p: 3, boxShadow: 3, borderRadius: 2, backgroundColor: 'white' }}>
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: "bold",
+              textAlign: "center",
+              paddingBottom: "20px",
+              fontSize: "2.5rem",
+              background: "linear-gradient(90deg, #8B0000, #FF1493, #C71585)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              animation: "fadeIn 1s ease-in-out",
+              gap:"5%",
+              display:"flex",
+              justifyContent:"center",
+              alignItems:"center"
+            }}
+          >
+             <Brain style={{ color: '#C71585' }} className={styles.logoIcon} />
+            VedaMindAI
+          </Typography>
 
-        <Button
+          <Typography style={{fontWeight :"700"}} variant="h5" textAlign="center" gutterBottom>
+            Create new account
+          </Typography>
+          <form className='form_element' onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField fullWidth label="Username" value={username} onChange={(e) => setUsername(e.target.value)} error={!!errors.username} helperText={errors.username} />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField fullWidth type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} error={!!errors.password} helperText={errors.password} />
+              </Grid>
+              {otpRequested && otpRequested === "Otp Sent" && (
+                <Grid item xs={12}>
+                  <TextField fullWidth label="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} error={!!errors.otp} helperText={errors.otp} />
+                </Grid>
+              )}
+              {otpRequested != "Otp Sent" && (
+                <Grid item xs={12}>
+                  <Button fullWidth variant="contained" onClick={handleOtpClick}>
+                    Get OTP
+                  </Button>
+
+                </Grid>
+              )}
+              <div style={{ backgroundColor: "blue" }}>
+                {otpRequested && <Appa action={otpRequested} />}
+              </div>
+              <Grid item xs={12}>
+                {otpRequested === "Otp Sent" &&
+                  <Button fullWidth variant="contained" color="primary" type="submit" disabled={!otpRequested}>
+                    Signup
+                  </Button>
+                }
+                {signupmessage && <Appa action={signupmessage} />}
+
+              </Grid>
+              <Grid item xs={12}>
+                <Button fullWidth variant="text" color="secondary" onClick={() => navigate('/')}>Already have an account? Login</Button>
+              </Grid>
+            </Grid>
+          </form>
+        </Box>
+
+        <Box className="btns" sx={{ textAlign: 'center', marginTop: 2 }}>
+          <Button
             color="primary"
-          variant="contained"
-          sx={{color: '#fff', margin: 1 }}
-          startIcon={<FontAwesomeIcon icon={faMicrosoft} />}
-        >
-         <Link style={{color : "white",fontWeight : "400" }} to="https://www.bing.com/search?pglt=2339&q=goggle+gemein+ai+playstore&cvid=d5d2594a86c146128a1ac267d9cc28e3&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIGCAEQABhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEDSAQc4NjNqMGoxqAIAsAIA&FORM=ANNTA1&PC=U531">Get it on Microsoft</Link>
-        </Button>
+            variant="contained"
+            sx={{ margin: 1 }}
+            startIcon={<FontAwesomeIcon icon={faGooglePlay} />}
+          >
+            <Link style={{ color: "white", fontWeight: "400" }} to="https://www.google.com/search?q=goggle+gemein+ai+playstore&rlz=1C1CHBF_enIN1139IN1139&oq=goggle+gemein+ai+playstore&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgWGB4yCAgCEAAYFhgeMg0IAxAAGIYDGIAEGIoFMg0IBBAAGIYDGIAEGIoFMg0IBRAAGIYDGIAEGIoF0gEINTQxNWowajeoAgCwAgA&sourceid=chrome&ie=UTF-8" >Get it on Play store</Link>
+          </Button>
+
+          <Button
+            color="primary"
+            variant="contained"
+            sx={{ color: '#fff', margin: 1 }}
+            startIcon={<FontAwesomeIcon icon={faMicrosoft} />}
+          >
+            <Link style={{ color: "white", fontWeight: "400" }} to="https://www.bing.com/search?pglt=2339&q=goggle+gemein+ai+playstore&cvid=d5d2594a86c146128a1ac267d9cc28e3&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIGCAEQABhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEDSAQc4NjNqMGoxqAIAsAIA&FORM=ANNTA1&PC=U531">Get it on Microsoft</Link>
+          </Button>
+        </Box>
       </Box>
-    </Box>
     </Box>
   );
 }

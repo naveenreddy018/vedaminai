@@ -14,7 +14,12 @@
   /* li{
     color:  black !important;
   } */
-
+  h3{
+    color : blue !important
+  }
+  li{
+    color: #333;
+  }
   .help-container h1 {
     font-size:4rem;
     color: #333;
@@ -53,13 +58,13 @@
     padding: 10px;
     background-color: #f1f1f1;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
   }
   .question  h3{
     font-size: 1.5rem;
   }
   .question:hover {
-    background-color: #007bff;
+    background-color: rgba(0, 123, 255, 0.5);
     color: #fff;
   }
   

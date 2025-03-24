@@ -20,6 +20,7 @@ import videos2 from "./videos2.mp4"
 import videos3 from "./vidoes3.mp4"
 import unnamed from "./unnamed.webp"
 import blob from './blob.svg'
+import veda from "./veda.png"
 
 
 
@@ -45,5 +46,6 @@ export const assets = {
     videos1,
     videos2,
     videos3,
-    blob
+    blob,
+    veda
 }
