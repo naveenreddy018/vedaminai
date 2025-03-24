@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Brain, Sparkles, Lock, User } from "lucide-react";
 import ParticlesBackground from "./particebackgorund";
-import styles from "./login.module.css"; // Import CSS module
+import styles from "./Login.module.css"; // Import CSS module
 import { Appa } from "../Notify/notify";
 
 const Login = () => {
