@@ -10,19 +10,20 @@ const TypingEffect = ({ text, delay = 30, prompt }) => {
   const [liked, setLiked] = useState(false);
   const chatContainerRef = useRef(null);
   const typingIntervalRef = useRef(null);
-
   useEffect(() => {
-    if (!text) return;
-
+    if (!text || typeof text !== "string") return;
+  
     setDisplayText(""); // Reset before typing starts
     setShowButtons(false);
     setIndex(0);
-
-    let formattedText = text.replace(/\*/g, "").replace(/(\d+\.)/g, "\n$1");
-
+  
+    let formattedText = String(text) // Ensure it's a string
+      .replace(/\*/g, "")
+      .replace(/(\d+\.)/g, "\n$1");
+  
     let charIndex = 0;
-    if (typingIntervalRef.current) clearInterval(typingIntervalRef.current); // Clear any existing interval
-
+    if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+  
     typingIntervalRef.current = setInterval(() => {
       if (charIndex < formattedText.length) {
         setDisplayText((prev) => prev + formattedText[charIndex]); // Append character correctly
@@ -33,9 +34,10 @@ const TypingEffect = ({ text, delay = 30, prompt }) => {
         setShowButtons(true);
       }
     }, Math.max(5, delay / 10));
-
+  
     return () => clearInterval(typingIntervalRef.current);
   }, [text, delay]);
+  
 
   useEffect(() => {
     if (chatContainerRef.current) {

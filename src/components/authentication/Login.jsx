@@ -48,7 +48,7 @@ const Login = () => {
       if (res.ok) {
         localStorage.setItem("Username", username);
         localStorage.setItem("token", JSON.stringify(data.token1));
-        handleLoginMessage("Login successful! Redirecting...");
+        handleLoginMessage("Login successful!");
 
         setTimeout(() => navigate("/profile"), 1500);
       } else {

@@ -211,7 +211,6 @@ const styles = {
     padding: "30px",
     alignItems: "center",
     background: "linear-gradient(135deg, #1e1e1e, #2a2a2a)",
-    borderRadius: "15px",
     boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5)",
     flexWrap: "wrap",
     animation: "fadeIn 1s ease-in-out",
