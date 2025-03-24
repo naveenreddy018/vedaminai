@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Appa } from '../Notify/notify';
 import "./Register.css"
 import { assets } from '../../assets/assets';
-import styles from "./login.module.css"; // Import CSS module
+import styles from "./Login.module.css"; // Import CSS module
 import { Brain } from 'lucide-react';
 
 export default function SignupPage() {
