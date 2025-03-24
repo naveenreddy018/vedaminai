@@ -1,34 +1,65 @@
-import { useState } from 'react';
-import { Box, TextField, Button, Typography, Grid } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGooglePlay, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
-import { Link, useNavigate } from 'react-router-dom';
-import { Appa } from '../Notify/notify';
-import "./Register.css"
-import { assets } from '../../assets/assets';
+import { useState } from "react";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Grid,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGooglePlay, faMicrosoft } from "@fortawesome/free-brands-svg-icons";
+import { Link, useNavigate } from "react-router-dom";
+import { Appa } from "../Notify/notify";
+import "./Register.css";
+import { Brain } from "lucide-react";
+import ParticlesBackground from "./particebackgorund";
+import { assets } from "../../assets/assets";
 import styles from "./Login.module.css"; // Import CSS module
-import { Brain } from 'lucide-react';
+import SamaVedaCard from "./VedaImage";
+
+// Dark Theme Configuration
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#90caf9", // Light blue
+    },
+    background: {
+      default: "#121212", // Dark background
+      paper: "#1e1e1e", // Dark paper
+    },
+    text: {
+      primary: "#ffffff", // White text
+      secondary: "#b0bec5", // Light gray
+    },
+  },
+});
 
 export default function SignupPage() {
   const navigate = useNavigate();
-  const baseUrl = 'https://render-back-end-8.onrender.com';
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [otp, setOtp] = useState('');
+  const baseUrl = "https://render-back-end-8.onrender.com";
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
   const [errors, setErrors] = useState({});
   const [otpRequested, setOtpRequested] = useState(null);
-  const [signupmessage, setsignupmessage] = useState(false)
-
+  const [signupmessage, setsignupmessage] = useState(false);
 
   const validateInputs = () => {
     const newErrors = {};
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/;
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/;
 
-    if (!username.trim()) newErrors.username = 'Username is required.';
-    if (!password) newErrors.password = 'Password is required.';
-    else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters long.';
-    else if (!passwordRegex.test(password)) newErrors.password = 'Password must include an uppercase letter and a special symbol.';
-    if (otpRequested && !otp) newErrors.otp = 'OTP is required.';
+    if (!username.trim()) newErrors.username = "Username is required.";
+    if (!password) newErrors.password = "Password is required.";
+    else if (password.length < 6)
+      newErrors.password = "Password must be at least 6 characters long.";
+    else if (!passwordRegex.test(password))
+      newErrors.password =
+        "Password must include an uppercase letter and a special symbol.";
+    if (otpRequested && !otp) newErrors.otp = "OTP is required.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -40,151 +71,227 @@ export default function SignupPage() {
 
     try {
       const res = await fetch(`${baseUrl}/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
       const data = await res.json();
 
-      if (data.message === 'resgistered successfully') {
-        // alert('You have registered successfully!');
-        setsignupmessage('You have registered successfully!')
+      if (data.message === "resgistered successfully") {
+        setsignupmessage("You have registered successfully!");
         setTimeout(() => {
-          navigate('/');
+          navigate("/");
         }, 3000);
       } else {
-        // alert(data.message || "error message ");
-        setsignupmessage("Username already taken")
+        setsignupmessage("Username already taken");
       }
     } catch (error) {
-      // alert('An error occurred while registering.');
-      setsignupmessage("An error occurred while registering.")
+      setsignupmessage("An error occurred while registering.");
     }
   };
 
   const handleOtpClick = async () => {
     if (!username.trim()) {
-      setErrors({ username: 'Username is required to get OTP.' });
+      setErrors({ username: "Username is required to get OTP." });
       return;
     }
     try {
       const res = await fetch(`${baseUrl}/getotp`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username }),
       });
       const data = await res.json();
 
       if (!res.ok) {
-        setOtpRequested(data.message || "Failed to send otp")
+        setOtpRequested(data.message || "Failed to send otp");
         return;
       }
 
-      setOtp(data.otp)
-      setOtpRequested(true);
-      // alert('OTP sent successfully.');
-      setOtpRequested("Otp Sent")
-
+      setOtp(data.otp);
+      setOtpRequested("Otp Sent");
     } catch (error) {
-      setOtpRequested(error)
-      // alert('An error occurred while sending OTP hello.');
-      // console.log(error)
+      setOtpRequested(error);
     }
   };
 
   return (
-    <Box className="seperator" sx={{ display: "flex", justifyContent: 'center', gap: "10%", alignItems: 'center', }} >
-      <Typography className="image" variant="h3" sx={{ fontWeight: 'bold', display: "inline-flex", gap: " 50px", color: '#1976d2', textAlign: 'center', paddingBottom: '0px' }}>
-        <img className='imagecontainer' src={assets.unnamed} alt="register image " style={{ width: "45%" }} />
-      </Typography>
-      <Box className="container1" sx={{ display: 'flex', flexDirection: 'column', height: '100vh', justifyContent: 'center', alignItems: 'center', marginLeft: "-30%" }}>
-
-        <Box className="container" sx={{ width: '350px', p: 3, boxShadow: 3, borderRadius: 2, backgroundColor: 'white' }}>
-          <Typography
-            variant="h3"
+    <ThemeProvider theme={darkTheme}>
+      <Box
+        className="seperator"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "10%",
+          alignItems: "center",
+          minHeight: "100vh",
+          backgroundColor: "background.default",
+          color: "text.primary",
+        }}
+      >
+        <ParticlesBackground />
+        <SamaVedaCard className="hello" />
+        <Box className="container1" sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          
+          <Box
+            className="container"
             sx={{
-              fontWeight: "bold",
-              textAlign: "center",
-              paddingBottom: "20px",
-              fontSize: "2.5rem",
-              background: "linear-gradient(90deg, #8B0000, #FF1493, #C71585)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              animation: "fadeIn 1s ease-in-out",
-              gap:"5%",
-              display:"flex",
-              justifyContent:"center",
-              alignItems:"center"
+              width: "350px",
+              p: 3,
+              boxShadow: 3,
+              borderRadius: 2,
+              backgroundColor: "background.paper",
+              color: "text.primary",
+         
             }}
-          >
-             <Brain style={{ color: '#C71585' }} className={styles.logoIcon} />
-            VedaMindAI
-          </Typography>
 
-          <Typography style={{fontWeight :"700"}} variant="h5" textAlign="center" gutterBottom>
-            Create new account
-          </Typography>
-          <form className='form_element' onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField fullWidth label="Username" value={username} onChange={(e) => setUsername(e.target.value)} error={!!errors.username} helperText={errors.username} />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField fullWidth type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} error={!!errors.password} helperText={errors.password} />
-              </Grid>
-              {otpRequested && otpRequested === "Otp Sent" && (
+          >
+          
+            <Typography
+              variant="h3"
+              sx={{
+                fontWeight: "bold",
+                textAlign: "center",
+                paddingBottom: "20px",
+                fontSize: "2.5rem",
+                background: "linear-gradient(90deg, #8B0000, #FF1493, #C71585)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                display:"flex",
+                justifyContent:"center",
+                alignItems:"center",
+                gap:"5%"
+                
+              }}
+            >
+              <Brain style={{ color: "#C71585" }} className={styles.logoIcon} />
+              VedaMindAI
+            </Typography>
+
+            <Typography variant="h5" sx={{ fontWeight: 700, textAlign: "center" ,marginBottom :"10px"}}>
+              Create new account
+            </Typography>
+
+            <form className="form_element" onSubmit={handleSubmit}>
+              <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <TextField fullWidth label="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} error={!!errors.otp} helperText={errors.otp} />
+                  <TextField
+                    fullWidth
+                    label="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    error={!!errors.username}
+                    helperText={errors.username}
+                    sx={{ input: { color: "white" } }}
+                  />
                 </Grid>
-              )}
-              {otpRequested != "Otp Sent" && (
                 <Grid item xs={12}>
-                  <Button fullWidth variant="contained" onClick={handleOtpClick}>
-                    Get OTP
-                  </Button>
-
+                  <TextField
+                    fullWidth
+                    type="password"
+                    label="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    error={!!errors.password}
+                    helperText={errors.password}
+                    sx={{ input: { color: "white" } }}
+                  />
                 </Grid>
-              )}
-              <div style={{ backgroundColor: "blue" }}>
-                {otpRequested && <Appa action={otpRequested} />}
-              </div>
-              <Grid item xs={12}>
-                {otpRequested === "Otp Sent" &&
-                  <Button fullWidth variant="contained" color="primary" type="submit" disabled={!otpRequested}>
-                    Signup
+
+                {otpRequested && otpRequested === "Otp Sent" && (
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Enter OTP"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      error={!!errors.otp}
+                      helperText={errors.otp}
+                      sx={{ input: { color: "white" } }}
+                    />
+                  </Grid>
+                )}
+
+                {otpRequested !== "Otp Sent" && (
+                  <Grid item xs={12}>
+                    <Button className="btn" fullWidth variant="contained" onClick={handleOtpClick}>
+                      Get OTP
+                    </Button>
+                  </Grid>
+                )}
+
+                <Grid item xs={12}>
+                  {otpRequested === "Otp Sent" && (
+                    <Button className="btn" fullWidth variant="contained" type="submit" disabled={!otpRequested}>
+                      Signup
+                    </Button>
+                  )}
+                  {signupmessage && <Appa action={signupmessage} />}
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Button fullWidth variant="text" className="btn" color="secondary" onClick={() => navigate("/")}>
+                    Already have an account? Login
                   </Button>
-                }
-                {signupmessage && <Appa action={signupmessage} />}
-
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <Button fullWidth variant="text" color="secondary" onClick={() => navigate('/')}>Already have an account? Login</Button>
-              </Grid>
-            </Grid>
-          </form>
-        </Box>
+            </form>
+          </Box>
+          <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginTop: "20px" }}>
+      {/* Google Play Button */}
+      <Button
+      className="btn"
+        variant="contained"
+        sx={{
+          backgroundColor: "#4285F4",
+          color: "white",
+          padding: "10px 20px",
+          fontSize: "16px",
+          fontWeight: "bold",
+          textTransform: "none",
+          borderRadius: "8px",
+          "&:hover": { backgroundColor: "#357ae8" },
+        }}
+        startIcon={<FontAwesomeIcon icon={faGooglePlay} />}
+      >
+        <Link
+          to="https://www.google.com/search?q=goggle+gemein+ai+playstore"
+          style={{ color: "inherit", textDecoration: "none" }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Get it on Play Store
+        </Link>
+      </Button>
 
-        <Box className="btns" sx={{ textAlign: 'center', marginTop: 2 }}>
-          <Button
-            color="primary"
-            variant="contained"
-            sx={{ margin: 1 }}
-            startIcon={<FontAwesomeIcon icon={faGooglePlay} />}
-          >
-            <Link style={{ color: "white", fontWeight: "400" }} to="https://www.google.com/search?q=goggle+gemein+ai+playstore&rlz=1C1CHBF_enIN1139IN1139&oq=goggle+gemein+ai+playstore&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgWGB4yCAgCEAAYFhgeMg0IAxAAGIYDGIAEGIoFMg0IBBAAGIYDGIAEGIoFMg0IBRAAGIYDGIAEGIoF0gEINTQxNWowajeoAgCwAgA&sourceid=chrome&ie=UTF-8" >Get it on Play store</Link>
-          </Button>
-
-          <Button
-            color="primary"
-            variant="contained"
-            sx={{ color: '#fff', margin: 1 }}
-            startIcon={<FontAwesomeIcon icon={faMicrosoft} />}
-          >
-            <Link style={{ color: "white", fontWeight: "400" }} to="https://www.bing.com/search?pglt=2339&q=goggle+gemein+ai+playstore&cvid=d5d2594a86c146128a1ac267d9cc28e3&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIGCAEQABhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEDSAQc4NjNqMGoxqAIAsAIA&FORM=ANNTA1&PC=U531">Get it on Microsoft</Link>
-          </Button>
+      {/* Microsoft Button */}
+      <Button
+      className="btn"
+        variant="contained"
+        sx={{
+          backgroundColor: "#00A4EF",
+          color: "white",
+          padding: "10px 20px",
+          fontSize: "16px",
+          fontWeight: "bold",
+          textTransform: "none",
+          borderRadius: "8px",
+          "&:hover": { backgroundColor: "#008ecf" },
+        }}
+        startIcon={<FontAwesomeIcon icon={faMicrosoft} />}
+      >
+        <Link
+          to="https://www.bing.com/search?q=goggle+gemein+ai+playstore"
+          style={{ color: "inherit", textDecoration: "none" }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Get it on Microsoft
+        </Link>
+      </Button>
+    </div>
         </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 }
-

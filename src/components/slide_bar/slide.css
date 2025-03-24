@@ -50,8 +50,8 @@ body {
   font-family: 'Poppins', sans-serif; 
 }
 
-h3 {
-  color: white;
+.menu{
+  color: white !important;
   font-weight: 600;
 }
 

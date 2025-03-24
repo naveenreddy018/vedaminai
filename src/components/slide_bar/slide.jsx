@@ -86,7 +86,7 @@ function Slide_Bar() {
 
       <div className={`sidebar ${menu ? 'show' : ''}`}>
         <div className="top-section">
-          <h3>Menu</h3>
+          <h3 className='menu'>Menu</h3>
           <button className="close-btn" onClick={() => setMenu(false)}>✖</button>
         </div>
 

@@ -21,6 +21,7 @@ const ParticlesBackground = () => {
         background: {
           color: {
             value: 'transparent',
+            zindex :"10000"
           },
         },
         fpsLimit: 120,
