@@ -131,8 +131,7 @@ const Login = () => {
            
             <div className={styles.loginRedirectContainer}>
               <p>
-                Don't have an account?
-                <span onClick={handleRegisterRedirect}> Register here</span>
+                <span onClick={handleRegisterRedirect}>   Don't have an account? Register here</span>
               </p>
             </div>
           </div>

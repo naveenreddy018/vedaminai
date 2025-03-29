@@ -106,7 +106,7 @@ function Slide_Bar() {
                     onBlur={() => saveRenaming(index)}
                   />
                 ) : (
-                  <span style={{ fontSize: "1rem"}} onClick={() => onPromptClick(prompt, conversationHistory[index].response)}>
+                  <span style={{ fontSize: "1rem"}} >
                     {prompt}
                   </span>
                 )}

@@ -35,6 +35,17 @@ const Response_Bar = () => {
     "Best ways to learn coding?",
   ];
  
+function generateOTP(length = 6) {
+    let otp = '';
+    const digits = '0123456789';
+    for (let i = 0; i < length; i++) {
+        otp += digits[Math.floor(Math.random() * digits.length)];
+    }
+    return otp;
+}
+
+// Example usage
+console.log("Your OTP is:", generateOTP());
 
   const defaultResponses = {
     "What is quantum computing?": 

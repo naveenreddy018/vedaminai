@@ -99,13 +99,13 @@ const TypingEffect = ({ text, delay = 30, prompt }) => {
 
       {showButtons && (
         <div  className="buttonContainer" style={styles.buttonContainer}>
-          <button style={styles.iconButton} onClick={handleCopy} title="Copy">
+          <button className="btn" style={styles.iconButton} onClick={handleCopy} title="Copy">
             <FaCopy /> Copy
           </button>
-          <button style={styles.iconButton} onClick={handleShare} title="Share">
+          <button  className="btn"  style={styles.iconButton} onClick={handleShare} title="Share">
             <FaShareAlt /> Share
           </button>
-          <button
+          <button  className="btn" 
             style={{ ...styles.iconButton, backgroundColor: liked ? "#ffdd57" : "#ffffff" }}
             onClick={handleLike}
             title="Like"

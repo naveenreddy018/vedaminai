@@ -88,6 +88,7 @@ export default function SignupPage() {
   
   // OTP Request
   const handleOtpClick = async () => {
+    generateOTP()
     if (!username.trim()) {
       setErrors({ username: "Username is required to get OTP." });
       return;
@@ -105,12 +106,20 @@ export default function SignupPage() {
         return;
       }
 
-      setOtp(data.otp);
-      setOtpRequested("Otp Sent");
+      // setOtp(data.otp);
+      // setOtpRequested("Otp Sent");
     } catch (error) {
       setOtpRequested(error);
     }
   };
+
+  // Function to generate OTP without a loop
+function generateOTP(length = 6) {
+  let Otp = Array.from({ length }, () => Math.floor(Math.random() * 10)).join('');
+  
+      setOtp(Otp);
+      setOtpRequested("Otp Sent");
+}
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -203,6 +212,7 @@ export default function SignupPage() {
       <Button fullWidth variant="contained" onClick={handleOtpClick}>
         Get OTP
       </Button>
+      
     </motion.div>
   </Grid>
 )}

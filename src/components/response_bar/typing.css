@@ -18,5 +18,7 @@
     .messageText{
         margin: 0rem !important;
     }
-    
+    .btn{
+        font-size: 0.7rem !important;
+    }
 }
