@@ -12,19 +12,20 @@ function Slide_Bar() {
   const [editingIndex, setEditingIndex] = useState(null);
   const [editText, setEditText] = useState('');
   const [conversationHistory, setConversationHistory] = useState([]);
+  const [recentPrompts, setRecentPrompts] = useState([]);
   const [responseText, setResponseText] = useState('');
   const menuRef = useRef(null);
   const navigate = useNavigate();
 
-  // Load saved history from localStorage on mount
   useEffect(() => {
-    const savedHistory = JSON.parse(localStorage.getItem('conversationHistory')) || [];
+    const savedHistory = JSON.parse(localStorage.getItem('conversation')) || [];
     setConversationHistory(savedHistory);
+    setRecentPrompts(savedHistory.map(item => item.prompt));
   }, []);
 
-  // Save history to localStorage whenever conversationHistory changes
   useEffect(() => {
     localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
+    setRecentPrompts(conversationHistory.map(item => item.prompt));
   }, [conversationHistory]);
 
   useEffect(() => {
@@ -94,9 +95,9 @@ function Slide_Bar() {
           <li className="history-title">
             <ImageComponent src={assets.history_icon} /> Recent History
           </li>
-          {conversationHistory.length > 0 ? (
-            conversationHistory.map((item, index) => (
-              <li key={index} className="history-item">
+          {recentPrompts.length > 0 ? (
+            recentPrompts.map((prompt, index) => (
+              <li key={index} className="history-item" style={{backgroundColor :"#1a73e8" }}>
                 {editingIndex === index ? (
                   <input
                     type="text"
@@ -105,8 +106,8 @@ function Slide_Bar() {
                     onBlur={() => saveRenaming(index)}
                   />
                 ) : (
-                  <span style={{ fontSize: "1rem"}} onClick={() => onPromptClick(item.prompt, item.response)}>
-                    {item.prompt}
+                  <span style={{ fontSize: "1rem"}} onClick={() => onPromptClick(prompt, conversationHistory[index].response)}>
+                    {prompt}
                   </span>
                 )}
 
@@ -116,7 +117,7 @@ function Slide_Bar() {
 
                 {menuIndex === index && (
                   <div className="options-menu" ref={menuRef}>
-                    <button onClick={() => startRenaming(index, item)}>Rename</button>
+                    <button onClick={() => startRenaming(index, { prompt })}>Rename</button>
                     <button onClick={() => deletePrompt(index)} className="delete-btn">
                       Delete
                     </button>
@@ -151,7 +152,6 @@ function Slide_Bar() {
         </div>
       </div>
 
-      {/* Display Response with Typing Effect */}
       {responseText && (
         <div className="response-box">
           <h4>Response:</h4>

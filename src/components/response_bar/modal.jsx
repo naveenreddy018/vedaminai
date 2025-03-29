@@ -125,14 +125,23 @@ function LogoutModal({setUserModalBody}) {
     const timer = setTimeout(() => {
       setOpen(true);
     }, 0);
-    return () => clearTimeout(timer); // Cleanup on unmount
+    return () => clearTimeout(timer);
   }, []);
 
   const handleClose = () => setOpen(false);
   const handleLogout = () => {
+    const conversationData = localStorage.getItem('conversation');  
+  
+    if (conversationData) {
+      console.log("Conversation Data Before Logout:", JSON.parse(conversationData)); 
+    }
+
+    localStorage.removeItem('conversation');  
     localStorage.removeItem('token');  
+  
     navigate('/');  
   };
+  
 
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="logout-modal">

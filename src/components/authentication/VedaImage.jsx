@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardMedia, Typography, Box, Button } from "@mui/material";
 import { motion } from "framer-motion";
 import Tilt from "react-parallax-tilt";
+import { assets } from "../../assets/assets";
 
 
 const SamaVedaCard = () => {
@@ -82,8 +83,9 @@ const SamaVedaCard = () => {
           >
             <CardMedia
               component="img"
-              height="250"
-              image="https://vedicfeed.com/wp-content/uploads/2018/06/Capture.jpg"
+              height="300px"
+              width="300px"
+              image={"https://www.originofscience.com/wp-content/uploads/2024/04/dc597a09-5e5c-4a4e-bdbc-1180478cdef2.jpg"}
               alt="Sama Veda"
               sx={{ objectFit: "cover" }}
             />

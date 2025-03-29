@@ -1,163 +1,168 @@
 
 .seperator{
 
-    background: linear-gradient(135deg, #1e293b, #334155) !important; 
+  background: linear-gradient(135deg, #1e293b, #334155) !important; 
 
 }
 .container{
-    background: linear-gradient(135deg, #1e293b, #334155) !important; 
+  background: linear-gradient(135deg, #1e293b, #334155) !important; 
 }
 .btn{
-    background-color: rgba(147, 51, 234, 0.7) !important; 
-    color: white !important;
+  background-color: rgba(147, 51, 234, 0.7) !important; 
+  color: white !important;
 }
-
+.MuiTypography-root{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10%;
+}
 /* 
 @media (max-width: 1024px) {
-    .container {
-      width: 80%;
-      padding: 20px;
-    }
-    .container1 {
-      flex-direction: column;
-      gap: 20px;
-    }
-  }
-  
-  @media (max-width: 725px) {
-    .container {
-      width: 90%;
-      padding: 15px;
-    }
-    .form_element {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .seperator {
-      flex-direction: column;
-      gap: 15px;
-    }
-  }
-  
-  @media (max-width: 475px) {
-    .container {
-      width: 40%;
-      padding: 10px;
-    }
-    .form_element input {
-      font-size: 14px;
-    }
-    .seperator {
-      padding: 10px;
-    }
-    .button {
-      font-size: 14px;
-      padding: 8px;
-    }
-  }
-   */
-
-   /* Default Styles (Desktop First Approach) */
-.container {
-    max-width: 500px;
-  
+  .container {
+    width: 80%;
     padding: 20px;
   }
-  
+  .container1 {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 725px) {
+  .container {
+    width: 90%;
+    padding: 15px;
+  }
   .form_element {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: center;
   }
-  
+  .seperator {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 475px) {
+  .container {
+    width: 40%;
+    padding: 10px;
+  }
   .form_element input {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    font-size: 14px;
   }
-  
+  .seperator {
+    padding: 10px;
+  }
   .button {
-    width: 100%;
-    padding: 14px;
-    font-size: 16px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease;
+    font-size: 14px;
+    padding: 8px;
   }
-  
-  .button:hover {
-    background-color: #0056b3;
+}
+ */
+
+ /* Default Styles (Desktop First Approach) */
+.container {
+  max-width: 500px;
+
+  padding: 20px;
+}
+
+.form_element {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form_element input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.button {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.image {
+  width: 100%;
+  max-width: 400px;
+  display: block; /* Ensures visibility on larger screens */
+  margin: 10px auto;
+}
+
+/* For 1024px Screens (Large Tablets & Small Laptops) */
+@media (max-width: 1024px) {
+  .container {
+    max-width: 80%;
+    padding: 18px;
   }
-  
-  .image {
-    width: 100%;
-    max-width: 400px;
-    display: block; /* Ensures visibility on larger screens */
-    margin: 10px auto;
+  .form_element input {
+    font-size: 15px;
+    padding: 10px;
   }
-  
-  /* For 1024px Screens (Large Tablets & Small Laptops) */
-  @media (max-width: 1024px) {
-    .container {
-      max-width: 80%;
-      padding: 18px;
-    }
-    .form_element input {
-      font-size: 15px;
-      padding: 10px;
-    }
-    .button {
-      font-size: 15px;
-      padding: 12px;
-    }
+  .button {
+    font-size: 15px;
+    padding: 12px;
   }
-  
-  /* For 725px Screens (Tablets) */
-  @media (max-width: 725px) {
-    .container {
-      max-width: 85%;
-      padding: 16px;
-    }
-    .form_element input {
-      font-size: 14px;
-      padding: 9px;
-    }
-    .button {
-      font-size: 14px;
-      padding: 10px;
-    }
+}
+
+/* For 725px Screens (Tablets) */
+@media (max-width: 725px) {
+  .container {
+    max-width: 85%;
+    padding: 16px;
   }
-  
-  /* For 425px Screens (Mobile Devices) */
-  @media (max-width: 425px) {
-    .container1{
-        width: 90%;
-    }
-    .container {
-      max-width: 95%;
-      padding: 12px;
-    }
-    .form_element input {
-      font-size: 13px;
-      padding: 8px;
-    }
-    .button {
-      font-size: 13px;
-      padding: 10px;
-    }
-    .hello{
-      display: none;
-    }
-    .seperator{
-        gap: 1% !important;
-    }
-    .MuiButtonBase-root:nth-child(n+2){
-      display: none;
-    }
+  .form_element input {
+    font-size: 14px;
+    padding: 9px;
   }
-  
+  .button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+/* For 425px Screens (Mobile Devices) */
+@media (max-width: 425px) {
+  .container1{
+      width: 90%;
+  }
+  .container {
+    max-width: 95%;
+    padding: 12px;
+  }
+  .form_element input {
+    font-size: 13px;
+    padding: 8px;
+  }
+  .button {
+    font-size: 13px;
+    padding: 10px;
+  }
+  .hello{
+    display: none;
+  }
+  .seperator{
+      gap: 1% !important;
+  }
+  .MuiButtonBase-root:nth-child(n+2){
+    display: none;
+  }
+}

@@ -2,22 +2,23 @@ import { Margin } from "@mui/icons-material";
 import React, { useEffect, useState, useRef } from "react";
 import { FaCopy, FaShareAlt, FaThumbsUp } from "react-icons/fa";
 import "./typing.css"
+import { maxWidth, width } from "@mui/system";
 
 const TypingEffect = ({ text, delay = 30, prompt }) => {
-  const [displayText, setDisplayText] = useState("");
+  const [displayText, setDisplayText] = useState("..");
   const [index, setIndex] = useState(0);
   const [showButtons, setShowButtons] = useState(false);
   const [liked, setLiked] = useState(false);
   const chatContainerRef = useRef(null);
   const typingIntervalRef = useRef(null);
   useEffect(() => {
-    if (!text || typeof text !== "string") return;
+    if (!text || typeof text !== "string" || text.trim() === "") return;
   
-    setDisplayText(""); // Reset before typing starts
+    setDisplayText(".."); 
     setShowButtons(false);
     setIndex(0);
   
-    let formattedText = String(text) // Ensure it's a string
+    let formattedText = String(text)
       .replace(/\*/g, "")
       .replace(/(\d+\.)/g, "\n$1");
   
@@ -25,8 +26,11 @@ const TypingEffect = ({ text, delay = 30, prompt }) => {
     if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
   
     typingIntervalRef.current = setInterval(() => {
-      if (charIndex < formattedText.length) {
-        setDisplayText((prev) => prev + formattedText[charIndex]); // Append character correctly
+      if (charIndex < formattedText.length-1) {
+        // setDisplayText((prev) => (prev ? prev + formattedText[charIndex] : formattedText[charIndex]));
+        setDisplayText((prev) => (prev ? prev + formattedText[charIndex] : formattedText[charIndex]));
+
+
         charIndex += 1;
       } else {
         clearInterval(typingIntervalRef.current);
@@ -35,7 +39,12 @@ const TypingEffect = ({ text, delay = 30, prompt }) => {
       }
     }, Math.max(5, delay / 10));
   
-    return () => clearInterval(typingIntervalRef.current);
+    return () => {
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
+        typingIntervalRef.current = null;
+      }
+    };
   }, [text, delay]);
   
 
@@ -123,6 +132,7 @@ const styles = {
     padding: "10px",
     display: "flex",
     flexDirection: "column",
+    backgroundColor:"orange",
     gap: "10px",
     fontSize: "0.9rem",
     scrollbarWidth: "none", // Hide scrollbar for Firefox
@@ -134,6 +144,7 @@ const styles = {
     padding: "10px",
     borderRadius: "8px",
     wordWrap: "break-word",
+    maxWidthwidth:"1400px"
   },
   messageText: {
     fontSize: "1rem",

@@ -154,7 +154,7 @@ const Response_Bar = () => {
       setRequestInProgress(true);
   
       Array.push(currentPrompt);
-      const newConversation = [...conversation, { prompt: currentPrompt, response: "Thinking..." }];
+      const newConversation = [...conversation, { prompt: currentPrompt, response: "....Thinking..." }];
       setConversation(newConversation);
       localStorage.setItem("conversation", JSON.stringify(newConversation));
       localStorage.setItem("lastPrompt", currentPrompt);

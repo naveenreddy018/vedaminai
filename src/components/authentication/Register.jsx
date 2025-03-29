@@ -11,29 +11,19 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGooglePlay, faMicrosoft } from "@fortawesome/free-brands-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
-import { Appa } from "../Notify/notify";
-import "./Register.css";
+import { motion } from "framer-motion"; // Import Framer Motion
 import { Brain } from "lucide-react";
 import ParticlesBackground from "./particebackgorund";
-import { assets } from "../../assets/assets";
-import styles from "./Login.module.css"; // Import CSS module
-import SamaVedaCard from "./VedaImage";
+import styles from "./Login.module.css";
+import { Appa } from "../Notify/notify";
 
 // Dark Theme Configuration
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
-    primary: {
-      main: "#90caf9", // Light blue
-    },
-    background: {
-      default: "#121212", // Dark background
-      paper: "#1e1e1e", // Dark paper
-    },
-    text: {
-      primary: "#ffffff", // White text
-      secondary: "#b0bec5", // Light gray
-    },
+    primary: { main: "#90caf9" },
+    background: { default: "#121212", paper: "#1e1e1e" },
+    text: { primary: "#ffffff", secondary: "#b0bec5" },
   },
 });
 
@@ -47,28 +37,28 @@ export default function SignupPage() {
   const [otpRequested, setOtpRequested] = useState(null);
   const [signupmessage, setsignupmessage] = useState(false);
 
+  // Form Validation
   const validateInputs = () => {
     const newErrors = {};
-    const passwordRegex =
-      /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/;
 
     if (!username.trim()) newErrors.username = "Username is required.";
     if (!password) newErrors.password = "Password is required.";
     else if (password.length < 6)
-      newErrors.password = "Password must be at least 6 characters long.";
+      newErrors.password = "Password must be at least 6 characters.";
     else if (!passwordRegex.test(password))
-      newErrors.password =
-        "Password must include an uppercase letter and a special symbol.";
+      newErrors.password = "Password must include an uppercase letter and a special symbol.";
     if (otpRequested && !otp) newErrors.otp = "OTP is required.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  // Signup Function
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInputs()) return;
-
+  
     try {
       const res = await fetch(`${baseUrl}/register`, {
         method: "POST",
@@ -76,12 +66,18 @@ export default function SignupPage() {
         body: JSON.stringify({ username, password }),
       });
       const data = await res.json();
-
+  
       if (data.message === "resgistered successfully") {
         setsignupmessage("You have registered successfully!");
-        setTimeout(() => {
-          navigate("/");
-        }, 3000);
+        
+        // Reset input fields after successful signup
+        setUsername("");
+        setPassword("");
+        setOtp("");
+        setErrors({});
+        setOtpRequested(null);
+  
+        setTimeout(() => navigate("/"), 3000);
       } else {
         setsignupmessage("Username already taken");
       }
@@ -89,7 +85,8 @@ export default function SignupPage() {
       setsignupmessage("An error occurred while registering.");
     }
   };
-
+  
+  // OTP Request
   const handleOtpClick = async () => {
     if (!username.trim()) {
       setErrors({ username: "Username is required to get OTP." });
@@ -104,7 +101,7 @@ export default function SignupPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setOtpRequested(data.message || "Failed to send otp");
+        setOtpRequested(data.message || "Failed to send OTP");
         return;
       }
 
@@ -118,11 +115,9 @@ export default function SignupPage() {
   return (
     <ThemeProvider theme={darkTheme}>
       <Box
-        className="seperator"
         sx={{
           display: "flex",
           justifyContent: "center",
-          gap: "10%",
           alignItems: "center",
           minHeight: "100vh",
           backgroundColor: "background.default",
@@ -130,50 +125,40 @@ export default function SignupPage() {
         }}
       >
         <ParticlesBackground />
-        <SamaVedaCard className="hello" />
-        <Box className="container1" sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
           <Box
-            className="container"
             sx={{
               width: "350px",
               p: 3,
               boxShadow: 3,
               borderRadius: 2,
               backgroundColor: "background.paper",
-              color: "text.primary",
-         
+              textAlign: "center",      
             }}
-
           >
-          
-            <Typography
-              variant="h3"
-              sx={{
-                fontWeight: "bold",
-                textAlign: "center",
-                paddingBottom: "20px",
-                fontSize: "2.5rem",
-                // background: "linear-gradient(90deg, #8B0000, #FF1493, #C71585)",
-                backgroundColor:"white",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                display:"flex",
-                justifyContent:"center",
-                alignItems:"center",
-                gap:"5%"
-                
-              }}
+            {/* Animated Logo */}
+            <motion.div
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              
             >
-              <Brain style={{ color: "#C71585" }} className={styles.logoIcon} />
-              VedaMindAI
-            </Typography>
+              <Typography variant="h3" sx={{ fontWeight: "bold", fontSize: "2.5rem", color: "white !important" ,display :"flex",justifyContent:"center",alignItems:"center",gap:"5%"}}>
+                <Brain style={{ color: "#C71585" }} className={styles.logoIcon} />
+                VedaMindAI
+              </Typography>
+            </motion.div>
 
-            <Typography variant="h5" sx={{ fontWeight: 700, textAlign: "center" ,marginBottom :"10px"}}>
+            <Typography variant="h5" sx={{ fontWeight: 700, marginBottom: "10px" }}>
               Create new account
             </Typography>
 
-            <form className="form_element" onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
@@ -183,7 +168,6 @@ export default function SignupPage() {
                     onChange={(e) => setUsername(e.target.value)}
                     error={!!errors.username}
                     helperText={errors.username}
-                    sx={{ input: { color: "white" } }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -195,10 +179,10 @@ export default function SignupPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     error={!!errors.password}
                     helperText={errors.password}
-                    sx={{ input: { color: "white" } }}
                   />
                 </Grid>
 
+                
                 {otpRequested && otpRequested === "Otp Sent" && (
                   <Grid item xs={12}>
                     <TextField
@@ -213,13 +197,16 @@ export default function SignupPage() {
                   </Grid>
                 )}
 
-                {otpRequested !== "Otp Sent" && (
-                  <Grid item xs={12}>
-                    <Button className="btn" fullWidth variant="contained" onClick={handleOtpClick}>
-                      Get OTP
-                    </Button>
-                  </Grid>
-                )}
+{!otpRequested?.includes("Otp Sent") && (
+  <Grid item xs={12}>
+    <motion.div whileHover={{ scale: 1.05 }}>
+      <Button fullWidth variant="contained" onClick={handleOtpClick}>
+        Get OTP
+      </Button>
+    </motion.div>
+  </Grid>
+)}
+
 
                 <Grid item xs={12}>
                   {otpRequested === "Otp Sent" && (
@@ -231,67 +218,14 @@ export default function SignupPage() {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Button fullWidth variant="text" className="btn" color="secondary" onClick={() => navigate("/")}>
+                  <Button fullWidth variant="text" color="secondary" onClick={() => navigate("/")}>
                     Already have an account? Login
                   </Button>
                 </Grid>
               </Grid>
             </form>
           </Box>
-          <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginTop: "20px" }}>
-      {/* Google Play Button */}
-      <Button
-      className="btn"
-        variant="contained"
-        sx={{
-          backgroundColor: "#4285F4",
-          color: "white",
-          padding: "10px 20px",
-          fontSize: "16px",
-          fontWeight: "bold",
-          textTransform: "none",
-          borderRadius: "8px",
-          "&:hover": { backgroundColor: "#357ae8" },
-        }}
-        startIcon={<FontAwesomeIcon icon={faGooglePlay} />}
-      >
-        <Link
-          to="https://www.google.com/search?q=goggle+gemein+ai+playstore"
-          style={{ color: "inherit", textDecoration: "none" }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Get it on Play Store
-        </Link>
-      </Button>
-
-      {/* Microsoft Button */}
-      <Button
-      className="btn"
-        variant="contained"
-        sx={{
-          backgroundColor: "#00A4EF",
-          color: "white",
-          padding: "10px 20px",
-          fontSize: "16px",
-          fontWeight: "bold",
-          textTransform: "none",
-          borderRadius: "8px",
-          "&:hover": { backgroundColor: "#008ecf" },
-        }}
-        startIcon={<FontAwesomeIcon icon={faMicrosoft} />}
-      >
-        <Link
-          to="https://www.bing.com/search?q=goggle+gemein+ai+playstore"
-          style={{ color: "inherit", textDecoration: "none" }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Get it on Microsoft
-        </Link>
-      </Button>
-    </div>
-        </Box>
+        </motion.div>
       </Box>
     </ThemeProvider>
   );
